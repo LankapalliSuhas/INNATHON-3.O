@@ -1,0 +1,23 @@
+{
+  "device_id": "esp32_01",
+  "timestamp": 1711020000,
+  "relay1": true,
+  "relay2": true,
+  "buzzer": false,
+  "load1": {
+    "label": "Bulb 1",
+    "type": "bulb",
+    "voltage": 12.1,
+    "current": 0.48,
+    "power": 5.8,
+    "energy": 0.002
+  },
+  "load2": {
+    "label": "Bulb 2",
+    "type": "bulb",
+    "voltage": 11.9,
+    "current": 0.52,
+    "power": 6.2,
+    "energy": 0.0023
+  }
+}
