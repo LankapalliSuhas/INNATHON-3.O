@@ -1,35 +1,31 @@
 from fastapi import APIRouter
-from app.schemas import TelemetryInput
+from app.models.schemas import TelemetryPayload
 from app.services.processor import process_telemetry
-from app.services.storage import append_telemetry
-from app.services.file_bridge import write_frontend_payload
-import app.state as state
+from app import state
 
 router = APIRouter()
 
-
 @router.post("/ingest")
-def ingest_telemetry(payload: TelemetryInput):
-    # Save raw telemetry in runtime memory
-    state.latest_raw_telemetry = payload.model_dump()
+def ingest(payload: TelemetryPayload):
+    raw = payload.model_dump()
+    frontend = process_telemetry(raw)
 
-    # Process telemetry into frontend-ready digital twin payload
-    frontend_payload = process_telemetry(payload)
+    state.latest_raw = raw
+    state.latest_frontend = frontend
 
-    # Save latest processed payload in runtime memory
-    state.latest_frontend_payload = frontend_payload
+    state.history.append({
+        "timestamp": frontend["timestamp"],
+        "total_power_w": frontend["summary"]["total_power_w"],
+        "current_bill_inr": frontend["billing"]["current_bill_inr"],
+    })
 
-    # Append CSV telemetry log
-    append_telemetry(payload)
+    if len(state.history) > state.MAX_HISTORY:
+        state.history.pop(0)
 
-    # Write latest processed payload to file for frontend dev fallback
-    write_frontend_payload(frontend_payload)
-
-    # Sync recommended buzzer state into control state
-    state.control_state["buzzer"] = frontend_payload["control"]["buzzer_should_be_on"]
+    state.latest_frontend["history"] = state.history
 
     return {
         "status": "ok",
-        "message": "Telemetry processed",
-        "frontend_payload": frontend_payload
+        "message": "Telemetry received",
+        "frontend_ready": True
     }

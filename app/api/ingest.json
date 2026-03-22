@@ -5,16 +5,16 @@
   "relay2": true,
   "buzzer": false,
   "load1": {
-    "label": "Bulb 1",
+    "label": "Bulb",
     "type": "bulb",
-    "voltage": 12.1,
-    "current": 0.48,
-    "power": 5.8,
+    "voltage": 0.0,
+    "current": 0.0,
+    "power": 0.0,
     "energy": 0.002
   },
   "load2": {
-    "label": "Bulb 2",
-    "type": "bulb",
+    "label": "Fan",
+    "type": "fan",
     "voltage": 11.9,
     "current": 0.52,
     "power": 6.2,

@@ -1,6 +1,5 @@
 from app.config import settings
 
-
 def slab_bill(units_kwh: float) -> float:
     remaining = units_kwh
     bill = 0.0
@@ -30,16 +29,13 @@ def current_slab(units_kwh: float):
 
             return {
                 "current_slab": f"{int(prev_limit)}-{int(limit)}",
-                "rate": rate,
                 "next_slab": next_slab,
-                "units_to_next_slab": None if next_slab is None else round(limit - units_kwh, 4)
+                "rate": rate
             }
-
         prev_limit = limit
 
     return {
         "current_slab": "100+",
-        "rate": settings.TARIFF_SLABS[-1][1],
         "next_slab": None,
-        "units_to_next_slab": None
+        "rate": settings.TARIFF_SLABS[-1][1]
     }
